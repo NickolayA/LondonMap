@@ -1,0 +1,12 @@
+.London {
+    color: dodgerblue;
+    width: 100px;
+    height: 100px;
+    background-color: greenyellow;
+    border: none;
+}
+
+.London:focus {
+    border: 1px solid yellowgreen;
+    box-shadow: 100px;
+}
