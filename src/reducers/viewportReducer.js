@@ -7,7 +7,8 @@ const initialState = {
   latitude: 51.507222,
   zoom: 9,
   maxZoom: 20,
-  minZoom: 9
+  minZoom: 9,
+  pitch: 45
 };
 
 const viewportReducer = (state = initialState, action) => {
