@@ -8,7 +8,8 @@ class EnterPlace extends Component {
     placeName: ""
   };
 
-  _onSubmit = () => {
+  _onSubmit = e => {
+    e.preventDefault();
     if (this.state.placeName) {
       this.props.addPlacesToStore(this.state.placeName);
     } else alert("Enter place name or address");
