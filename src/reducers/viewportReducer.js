@@ -1,13 +1,15 @@
-import { CHANGE_VIEWPORT } from "../actions/types";
+import {
+  CHANGE_VIEWPORT
+} from "../actions/types";
 
 const initialState = {
   width: window.innerWidth,
   height: window.innerHeight,
   longitude: -0.1275,
   latitude: 51.507222,
-  zoom: 9,
+  zoom: 10,
   maxZoom: 20,
-  minZoom: 9,
+  minZoom: 10,
   pitch: 45
 };
 

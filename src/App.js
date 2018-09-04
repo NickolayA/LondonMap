@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import BackToCentroidButton from "./components/BackToCentroidButton";
+import EnterPlace from "./components/EnterPlace";
 import Map from "./components/Map";
 import { Provider } from "react-redux";
 import store from "./store";
@@ -9,8 +10,8 @@ class App extends Component {
     return (
       <Provider store={store}>
         <div>
-          <Map />
-          <BackToCentroidButton />
+          <Map className="Map" />
+          <EnterPlace />
         </div>
       </Provider>
     );

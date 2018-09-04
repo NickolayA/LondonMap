@@ -1,33 +1,18 @@
 import React, { Component } from "react";
-import DeckGL, { HexagonLayer, HexagonCellLayer } from "deck.gl";
+import DeckGL, {
+  HexagonCellLayer,
+  PathLayer,
+  IconLayer,
+  ScatterplotLayer
+} from "deck.gl";
 import { connect } from "react-redux";
 import "./PlaceLocationsLayer.css";
-
-// in RGB
-const LIGHT_SETTINGS = {
-  lightsPosition: [-0.144528, 49.739968, 8000, -3.807751, 54.104682, 8000],
-  ambientRatio: 0.4,
-  diffuseRatio: 0.6,
-  specularRatio: 0.2,
-  lightsStrength: [0.8, 0.0, 0.8, 0.0],
-  numberOfLights: 2
-};
-
-const colorRange = [
-  [1, 152, 189],
-  [73, 227, 206],
-  [216, 254, 181],
-  [254, 237, 177],
-  [254, 173, 84],
-  [209, 55, 78]
-];
-
-const elevationScale = 100;
 
 class PlaceLocationsLayer extends Component {
   state = {
     hoveredObject: null
   };
+
   _onHover = ({ x, y, object }) => {
     this.setState({ x, y, hoveredObject: object });
   };
@@ -41,10 +26,6 @@ class PlaceLocationsLayer extends Component {
         </div>
       )
     );
-  };
-
-  getElevationValue = points => {
-    return points.length * 100000;
   };
 
   render() {
@@ -68,19 +49,37 @@ class PlaceLocationsLayer extends Component {
     // } catch (err) {
     //   console.log(err);
     // }
+    console.log(this.props.routesReducer.data);
+    const layers = [
+      new ScatterplotLayer({
+        id: "scatterplot-layer",
+        data: this.props.routesReducer.data,
+        pickable: true,
+        opacity: 0.8,
+        radiusScale: 6,
+        radiusMinPixels: 1,
+        radiusMaxPixels: 100,
+        getPosition: d => {
+          console.log([d[0].lat, d[0].lon]);
+          return [d[0].lat, d[0].lon];
+        },
+        getRadius: d => Math.sqrt(d.exits),
+        getColor: d => [255, 140, 0]
+      }),
 
-    const layer = new HexagonCellLayer({
-      id: "hexagon-cell-layer",
-      data: this.props.neededPlaces,
-      radius: 50,
-      angle: 3.14,
-      pickable: true,
-      getColor: () => [155, 155, 155],
-      getElevation: d => {
-        return d.elevation;
-      },
-      onHover: this._onHover
-    });
+      new HexagonCellLayer({
+        id: "hexagon-cell-layer",
+        data: this.props.neededPlaces,
+        radius: 70,
+        angle: 3.14,
+        pickable: true,
+        getColor: () => [155, 155, 155],
+        getElevation: d => {
+          return d.elevation;
+        },
+        onHover: this._onHover
+      })
+    ];
 
     //   new HexagonLayer({
     //     id: "heatmap",
@@ -105,7 +104,7 @@ class PlaceLocationsLayer extends Component {
     return (
       <DeckGL
         {...this.props.viewport}
-        layers={[layer]}
+        layers={layers}
         onWebGLInitialized={this._initialize}
       >
         {this._renderTooltip}
@@ -117,7 +116,8 @@ class PlaceLocationsLayer extends Component {
 const mapStateToProps = state => {
   return {
     viewport: state.viewport,
-    neededPlaces: state.neededPlaces
+    neededPlaces: state.neededPlaces,
+    routesReducer: state.routesReducer
   };
 };
 

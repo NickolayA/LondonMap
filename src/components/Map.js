@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PlaceLocationsLayer from "./PlaceLocationsLayer";
 import { connect } from "react-redux";
 import MapGL from "react-map-gl";
 import { changeViewport } from "../actions/actions";
@@ -38,7 +39,9 @@ class Map extends Component {
         {...this.props.viewport}
         mapboxApiAccessToken={MAPBOX_TOKEN}
         onViewportChange={this._onViewPortChange}
-      />
+      >
+        <PlaceLocationsLayer />
+      </MapGL>
     );
   }
 }

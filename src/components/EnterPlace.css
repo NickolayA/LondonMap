@@ -13,6 +13,7 @@
     border-radius: 10px;
     border: none;
     animation: fadein 4s;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 .EnterPlace input[type=text]:focus,
@@ -27,6 +28,7 @@
     outline: none;
     border-color: red;
     box-shadow: 0 0 10px red;
+    /*TODO shadow facein animation*/
 }
 
 @keyframes fadein {

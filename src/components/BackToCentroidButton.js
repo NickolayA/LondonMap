@@ -1,7 +1,13 @@
 import React from "react";
+import { connect } from "react-redux";
 import "./BackToCentroidButton.css";
-const BackToCentroidButton = props => {
-  return <button className="London">Click me</button>;
+
+const BackToCentroidButton = ({ label }) => {
+  return (
+    <button title="Click me" className="London">
+      {label}
+    </button>
+  );
 };
 
-export default BackToCentroidButton;
+export default connect()(BackToCentroidButton);

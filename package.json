@@ -4,9 +4,10 @@
   "private": true,
   "dependencies": {
     "axios": "^0.18.0",
-    "deck.gl": "^5.3.4",
+    "deck.gl": "^6",
     "react": "^16.4.2",
     "react-dom": "^16.4.2",
+    "react-geocode": "^0.1.2",
     "react-map-gl": "^3.3.4",
     "react-redux": "^5.0.7",
     "react-scripts": "1.1.5",
