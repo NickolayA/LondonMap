@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import DeckGL, { HexagonLayer, HexagonCellLayer } from "deck.gl";
 import { connect } from "react-redux";
+import "./PlaceLocationsLayer.css";
 
 // in RGB
 const LIGHT_SETTINGS = {
@@ -24,10 +25,22 @@ const colorRange = [
 const elevationScale = 100;
 
 class PlaceLocationsLayer extends Component {
+  state = {
+    hoveredObject: null
+  };
   _onHover = ({ x, y, object }) => {
-    alert("hello owlrd");
-
     this.setState({ x, y, hoveredObject: object });
+  };
+
+  _renderTooltip = () => {
+    const { x, y, hoveredObject } = this.state;
+    return (
+      hoveredObject && (
+        <div className="tooltip" style={{ left: x, top: y }}>
+          <div>{hoveredObject.display_name}</div>
+        </div>
+      )
+    );
   };
 
   getElevationValue = points => {
@@ -35,7 +48,6 @@ class PlaceLocationsLayer extends Component {
   };
 
   render() {
-    console.log(this.props.neededPlaces);
     if ("error" in this.props.neededPlaces) {
       return null;
     }
@@ -62,11 +74,12 @@ class PlaceLocationsLayer extends Component {
       data: this.props.neededPlaces,
       radius: 50,
       angle: 3.14,
-      getColor: () => [255, 255, 255],
+      pickable: true,
+      getColor: () => [155, 155, 155],
       getElevation: d => {
-        console.log(d);
         return d.elevation;
-      }
+      },
+      onHover: this._onHover
     });
 
     //   new HexagonLayer({
@@ -94,7 +107,9 @@ class PlaceLocationsLayer extends Component {
         {...this.props.viewport}
         layers={[layer]}
         onWebGLInitialized={this._initialize}
-      />
+      >
+        {this._renderTooltip}
+      </DeckGL>
     );
   }
 }
