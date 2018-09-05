@@ -25,14 +25,18 @@ class PlaceLocationsLayer extends Component {
     return (
       hoveredObject && (
         <div className="tooltip" style={{ left: x, top: y }}>
-          <div>{hoveredObject.displayName}</div>
+          {"instruction" in hoveredObject ? (
+            <div>{hoveredObject.instruction.detailed}</div>
+          ) : null}
+          {"displayName" in hoveredObject ? (
+            <div>{hoveredObject.displayName}</div>
+          ) : null}
         </div>
       )
     );
   };
 
   _convertPathData = pathLineString => {
-    console.log(pathLineString);
     return JSON.parse(pathLineString).map(el => el.reverse());
   };
 
@@ -48,10 +52,15 @@ class PlaceLocationsLayer extends Component {
             widthScale: 10,
             widthMinPixels: 3,
             getPath: d => this._convertPathData(d.path.lineString),
-            getColor: d => [255, 0, 0],
-            getWidth: d => 5,
+            getColor: d => [255, 0, 0, 50],
+            getWidth: d => 20,
             autoHighlight: true,
-            highlightColor: [0, 0, 0, 100]
+            highlightColor: [0, 0, 0, 100],
+            onHover: d => {
+              //d.object.displayName = el.instruction.detailed;
+              //d.object = { ...d.object, displayName: el.instruction.detailed };
+              this._onHover(d);
+            }
           })
         );
       });
@@ -100,6 +109,7 @@ class PlaceLocationsLayer extends Component {
         },
         onHover: this._onHover,
         onClick: d => {
+          console.log(d);
           if (d.index === this.props.neededPlaces.length - 1) {
           } else {
             this.props.filterCheckedPlace(d.index);
@@ -115,8 +125,6 @@ class PlaceLocationsLayer extends Component {
         }
       })
     ].concat(this._makePathLayers(this.props.routesReducer));
-
-    console.log(layers.length, "Length of all layers");
 
     return (
       <React.Fragment>
