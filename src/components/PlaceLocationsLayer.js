@@ -5,10 +5,12 @@ import DeckGL, {
   IconLayer,
   ScatterplotLayer
 } from "deck.gl";
+import Spinner from "react-spinkit";
 import { connect } from "react-redux";
 import "./PlaceLocationsLayer.css";
 import { findPath, filterCheckedPlace } from "../actions/actions";
-
+import { LOOKING_FOR_PATH } from "../actions/types";
+import store from "../store";
 class PlaceLocationsLayer extends Component {
   state = {
     hoveredObject: null
@@ -29,38 +31,67 @@ class PlaceLocationsLayer extends Component {
     );
   };
 
+  _convertPathData = pathLineString => {
+    console.log(pathLineString);
+    return JSON.parse(pathLineString).map(el => el.reverse());
+  };
+
+  _makePathLayers = data => {
+    const layers = [];
+    try {
+      data.journeys[0].legs.forEach((el, index) => {
+        layers.push(
+          new PathLayer({
+            id: `path-layer${index}`,
+            data: [el],
+            pickable: true,
+            widthScale: 10,
+            widthMinPixels: 3,
+            getPath: d => this._convertPathData(d.path.lineString),
+            getColor: d => [255, 0, 0],
+            getWidth: d => 5,
+            autoHighlight: true,
+            highlightColor: [0, 0, 0, 100]
+          })
+        );
+      });
+      return layers;
+    } catch (err) {}
+  };
+
   render() {
     if ("error" in this.props.neededPlaces) {
       return null;
     }
 
-    console.log("About PathLayer", this.props.routesReducer);
-
     const layers = [
-      new PathLayer({
-        id: "path-layer",
-        data: [this.props.routesReducer],
-        pickable: true,
-        widthScale: 2,
-        widthMinPixels: 2,
-        getPath: d => {
-          let resultT = [];
-          d.journeys[0].legs
-            .map(el => {
-              return JSON.parse(el.path.lineString).map(el2 => el2.reverse());
-            })
-            .forEach(el => resultT.push(...el));
+      // new PathLayer({
+      //   id: "path-layer",
+      //   data: [this.props.routesReducer],
+      //   pickable: true,
+      //   widthScale: 2,
+      //   widthMinPixels: 3,
+      //   getPath: d => {
+      //     let resultT = [];
+      //     d.journeys[0].legs
+      //       .map(el => {
+      //         return JSON.parse(el.path.lineString).map(el2 => el2.reverse());
+      //       })
+      //       .forEach(el => resultT.push(...el));
 
-          return resultT;
-          // TODO Refactoring
-        },
-        getColor: d => [255, 0, 0],
-        getWidth: d => 5
-      }),
+      //     return resultT;
+      //     // TODO Refactoring
+      //   },
+      //   getColor: d => [255, 0, 0],
+      //   getWidth: d => 5,
+      //   onHover: d => console.log("hell", d),
+      //   autoHighlight: true,
+      //   highlightColor: [0, 0, 0, 100]
+      // }),
       new HexagonCellLayer({
         id: "hexagon-cell-layer",
         data: this.props.neededPlaces,
-        radius: 70,
+        radius: 100,
         angle: 3.14,
         pickable: true,
         getColor: d => d.color,
@@ -70,9 +101,11 @@ class PlaceLocationsLayer extends Component {
         onHover: this._onHover,
         onClick: d => {
           if (d.index === this.props.neededPlaces.length - 1) {
-            console.log(d.index);
           } else {
             this.props.filterCheckedPlace(d.index);
+
+            store.dispatch({ type: LOOKING_FOR_PATH });
+
             this.props.findPath(
               this.props.neededPlaces[
                 this.props.neededPlaces.length - 1
@@ -81,16 +114,24 @@ class PlaceLocationsLayer extends Component {
           }
         }
       })
-    ];
+    ].concat(this._makePathLayers(this.props.routesReducer));
+
+    console.log(layers.length, "Length of all layers");
 
     return (
-      <DeckGL
-        {...this.props.viewport}
-        layers={layers}
-        onWebGLInitialized={this._initialize}
-      >
-        {this._renderTooltip}
-      </DeckGL>
+      <React.Fragment>
+        <DeckGL
+          {...this.props.viewport}
+          layers={layers}
+          onWebGLInitialized={this._initialize}
+        >
+          {this._renderTooltip}
+        </DeckGL>
+
+        {"loading" in this.props.routesReducer ? (
+          <Spinner name="folding-cube" className="spinner" />
+        ) : null}
+      </React.Fragment>
     );
   }
 }
