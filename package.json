@@ -12,6 +12,7 @@
     "react-redux": "^5.0.7",
     "react-scripts": "1.1.5",
     "react-sliding-pane": "^2.0.2",
+    "react-spinkit": "^3.0.0",
     "redux": "^4.0.0",
     "redux-thunk": "^2.3.0"
   },
