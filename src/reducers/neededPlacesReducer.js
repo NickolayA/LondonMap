@@ -1,6 +1,4 @@
-import {
-  ADD_NEEDED_PLACES
-} from "../actions/types";
+import { ADD_NEEDED_PLACES, FILTER_CHECKED_PLACE } from "../actions/types";
 
 const neededPlacesReducer = (state = {}, action) => {
   switch (action.type) {
@@ -12,8 +10,9 @@ const neededPlacesReducer = (state = {}, action) => {
             lat: el.lat,
             lon: el.lon,
             centroid: [Number(el.lon), Number(el.lat)],
-            elevation: 5000,
-            display_name: el.display_name
+            elevation: 2500,
+            displayName: el.display_name,
+            color: "color" in el ? el.color : [140, 140, 140]
           };
         });
       } else {
@@ -21,6 +20,13 @@ const neededPlacesReducer = (state = {}, action) => {
           ...action.payload
         };
       }
+    case FILTER_CHECKED_PLACE:
+      const neededPlacesLength = state.length;
+      return state.filter((el, index) => {
+        if (index === action.payload || index + 1 === neededPlacesLength) {
+          return el;
+        }
+      });
     default:
       return state;
   }

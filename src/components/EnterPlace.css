@@ -1,42 +1,42 @@
-.EnterPlace input[type=text] {
-    position: absolute;
-    left: 0;
-    right: 0;
-    margin-left: auto;
-    margin-right: auto;
-    bottom: 25%;
-    width: 300px;
-    height: 30px;
-    font-size: 16px;
-    text-align: center;
-    opacity: 0.5;
-    border-radius: 10px;
-    border: none;
-    animation: fadein 4s;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+.EnterPlace input[type="text"] {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  bottom: 25%;
+  width: 300px;
+  height: 30px;
+  font-size: 16px;
+  text-align: center;
+  opacity: 0.5;
+  border-radius: 10px;
+  border: none;
+  animation: fadein 4s;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
-.EnterPlace input[type=text]:focus,
-.EnterPlace input[type=text]:focus .good {
-    outline: none;
-    border-color: none;
-    box-shadow: none;
+.EnterPlace input[type="text"]:focus,
+.EnterPlace input[type="text"]:focus .good {
+  outline: none;
+  border-color: none;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
-.EnterPlace input[type=text].error,
+.EnterPlace input[type="text"].error,
 .EnterPlace .error {
-    outline: none;
-    border-color: red;
-    box-shadow: 0 0 10px red;
-    /*TODO shadow facein animation*/
+  outline: none;
+  border-color: red;
+  box-shadow: 0 0 10px red;
+  /*TODO shadow facein animation*/
 }
 
 @keyframes fadein {
-    from {
-        opacity: 0;
-    }
+  from {
+    opacity: 0;
+  }
 
-    to {
-        opacity: 0.5;
-    }
+  to {
+    opacity: 0.5;
+  }
 }

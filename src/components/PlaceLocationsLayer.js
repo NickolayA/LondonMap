@@ -7,6 +7,7 @@ import DeckGL, {
 } from "deck.gl";
 import { connect } from "react-redux";
 import "./PlaceLocationsLayer.css";
+import { findPath, filterCheckedPlace } from "../actions/actions";
 
 class PlaceLocationsLayer extends Component {
   state = {
@@ -22,7 +23,7 @@ class PlaceLocationsLayer extends Component {
     return (
       hoveredObject && (
         <div className="tooltip" style={{ left: x, top: y }}>
-          <div>{hoveredObject.display_name}</div>
+          <div>{hoveredObject.displayName}</div>
         </div>
       )
     );
@@ -33,73 +34,54 @@ class PlaceLocationsLayer extends Component {
       return null;
     }
 
-    // let layers = [];
+    console.log("About PathLayer", this.props.routesReducer);
 
-    // try {
-    //   layers = this.props.neededPlaces.map(el => {
-    //     return new HexagonLayer({
-    //       id: el.display_name,
-    //       hexagonVertices: [el.centroid],
-    //       radius: 50,
-    //       angle: 3.14,
-    //       getColor: () => [255, 255, 255],
-    //       getElevation: () => el.elevation
-    //     });
-    //   });
-    // } catch (err) {
-    //   console.log(err);
-    // }
-    console.log(this.props.routesReducer.data);
     const layers = [
-      new ScatterplotLayer({
-        id: "scatterplot-layer",
-        data: this.props.routesReducer.data,
+      new PathLayer({
+        id: "path-layer",
+        data: [this.props.routesReducer],
         pickable: true,
-        opacity: 0.8,
-        radiusScale: 6,
-        radiusMinPixels: 1,
-        radiusMaxPixels: 100,
-        getPosition: d => {
-          console.log([d[0].lat, d[0].lon]);
-          return [d[0].lat, d[0].lon];
-        },
-        getRadius: d => Math.sqrt(d.exits),
-        getColor: d => [255, 140, 0]
-      }),
+        widthScale: 2,
+        widthMinPixels: 2,
+        getPath: d => {
+          let resultT = [];
+          d.journeys[0].legs
+            .map(el => {
+              return JSON.parse(el.path.lineString).map(el2 => el2.reverse());
+            })
+            .forEach(el => resultT.push(...el));
 
+          return resultT;
+          // TODO Refactoring
+        },
+        getColor: d => [255, 0, 0],
+        getWidth: d => 5
+      }),
       new HexagonCellLayer({
         id: "hexagon-cell-layer",
         data: this.props.neededPlaces,
         radius: 70,
         angle: 3.14,
         pickable: true,
-        getColor: () => [155, 155, 155],
+        getColor: d => d.color,
         getElevation: d => {
           return d.elevation;
         },
-        onHover: this._onHover
+        onHover: this._onHover,
+        onClick: d => {
+          if (d.index === this.props.neededPlaces.length - 1) {
+            console.log(d.index);
+          } else {
+            this.props.filterCheckedPlace(d.index);
+            this.props.findPath(
+              this.props.neededPlaces[
+                this.props.neededPlaces.length - 1
+              ].centroid.concat(d.lngLat)
+            );
+          }
+        }
       })
     ];
-
-    //   new HexagonLayer({
-    //     id: "heatmap",
-    //     data: this.props.neededPlaces,
-    //     radius: 1000,
-    //     opacity: 1,
-    //     extruded: true,
-    //     getElevationValue: d => {
-    //       console.log(d[0].height);
-    //       return d[0].height;
-    //     }
-    //getPosition: d => d.position
-
-    // getElevationValue: d => 500,
-    // extruded: true,
-    // getPosition: d => d.position,
-    // lightSettings: LIGHT_SETTINGS,
-    // opacity: 1,
-    // pickable: true,
-    // radius: 100
 
     return (
       <DeckGL
@@ -121,4 +103,14 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps)(PlaceLocationsLayer);
+const mapDispatchToProps = dispatch => {
+  return {
+    filterCheckedPlace: index => dispatch(filterCheckedPlace(index)),
+    findPath: coordinates => dispatch(findPath(coordinates))
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(PlaceLocationsLayer);

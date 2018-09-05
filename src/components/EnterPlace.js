@@ -47,7 +47,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     addPlacesToStore: placeName => {
-      return dispatch(addNeededPlaces(placeName));
+      dispatch(addNeededPlaces(placeName));
     }
   };
 };

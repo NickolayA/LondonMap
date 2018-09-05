@@ -9,7 +9,7 @@ const initialState = {
   latitude: 51.507222,
   zoom: 10,
   maxZoom: 20,
-  minZoom: 10,
+  minZoom: 9,
   pitch: 45
 };
 
