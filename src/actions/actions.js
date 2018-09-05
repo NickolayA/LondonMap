@@ -97,10 +97,8 @@ export const findPath = coordinates => async dispatch => {
 
   const request = `https://api.tfl.gov.uk/Journey/JourneyResults/${coordinates[1]},${
     coordinates[0]}/to/${coordinates[3]},${coordinates[2]}?walkingOptimization=false&app_id=${APP_ID}&app_key=${APP_KEY}`;
-  console.log(request);
   const response = await axios(request);
-  console.log(response);
-
+  console.log(request);
   dispatch({
     type: ADD_FOUNDED_PATH,
     payload: response.data
