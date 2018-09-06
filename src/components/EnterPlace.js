@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import "./EnterPlace.css";
 import { connect } from "react-redux";
 import { addNeededPlaces } from "../actions/actions";
+import {CLEAR_PATH} from '../actions/types';
 
 class EnterPlace extends Component {
   state = {
@@ -11,6 +12,7 @@ class EnterPlace extends Component {
   _onSubmit = e => {
     e.preventDefault();
     if (this.state.placeName) {
+      this.props.clearPath();
       this.props.addPlacesToStore(this.state.placeName);
     } else alert("Enter place name or address");
   };
@@ -48,7 +50,8 @@ const mapDispatchToProps = dispatch => {
   return {
     addPlacesToStore: placeName => {
       dispatch(addNeededPlaces(placeName));
-    }
+    },
+    clearPath: ()=> dispatch({type: CLEAR_PATH})
   };
 };
 
