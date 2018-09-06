@@ -80,7 +80,6 @@ class PlaceLocationsLayer extends Component {
         },
         onHover: this._onHover,
         onClick: d => {
-          console.log(d);
           if (d.index === this.props.neededPlaces.length - 1) {
           } else {
             this.props.filterCheckedPlace(d.index);

@@ -7,9 +7,9 @@ const initialState = {
   height: window.innerHeight,
   longitude: -0.1275,
   latitude: 51.507222,
-  zoom: 10,
+  zoom: 12,
   maxZoom: 20,
-  minZoom: 9,
+  minZoom: 12,
   pitch: 45
 };
 

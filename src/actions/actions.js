@@ -86,8 +86,6 @@ export const filterCheckedPlace = index => {
 };
 
 export const findPath = coordinates => async dispatch => {
-  console.log("findpath");
-
   const APP_ID = "bafe1922";
   const APP_KEY = "20ff777722f9f7ee2ec27ff30abc6b5a";
 
@@ -97,7 +95,6 @@ export const findPath = coordinates => async dispatch => {
     coordinates[2]
   )}?walkingOptimization=false&app_id=${APP_ID}&app_key=${APP_KEY}`;
   const response = await axios(request);
-  console.log(request);
   dispatch({
     type: ADD_FOUNDED_PATH,
     payload: response.data
