@@ -1,10 +1,5 @@
 import React, { Component } from "react";
-import DeckGL, {
-  HexagonCellLayer,
-  PathLayer,
-  IconLayer,
-  ScatterplotLayer
-} from "deck.gl";
+import DeckGL, { HexagonCellLayer, PathLayer } from "deck.gl";
 import Spinner from "react-spinkit";
 import { connect } from "react-redux";
 import "./PlaceLocationsLayer.css";
@@ -50,15 +45,14 @@ class PlaceLocationsLayer extends Component {
             data: [el],
             pickable: true,
             widthScale: 10,
-            widthMinPixels: 3,
+            widthMinPixels: 5,
             getPath: d => this._convertPathData(d.path.lineString),
             getColor: d => [255, 0, 0, 50],
             getWidth: d => 20,
             autoHighlight: true,
             highlightColor: [0, 0, 0, 100],
+            rounded: true,
             onHover: d => {
-              //d.object.displayName = el.instruction.detailed;
-              //d.object = { ...d.object, displayName: el.instruction.detailed };
               this._onHover(d);
             }
           })
@@ -74,29 +68,6 @@ class PlaceLocationsLayer extends Component {
     }
 
     const layers = [
-      // new PathLayer({
-      //   id: "path-layer",
-      //   data: [this.props.routesReducer],
-      //   pickable: true,
-      //   widthScale: 2,
-      //   widthMinPixels: 3,
-      //   getPath: d => {
-      //     let resultT = [];
-      //     d.journeys[0].legs
-      //       .map(el => {
-      //         return JSON.parse(el.path.lineString).map(el2 => el2.reverse());
-      //       })
-      //       .forEach(el => resultT.push(...el));
-
-      //     return resultT;
-      //     // TODO Refactoring
-      //   },
-      //   getColor: d => [255, 0, 0],
-      //   getWidth: d => 5,
-      //   onHover: d => console.log("hell", d),
-      //   autoHighlight: true,
-      //   highlightColor: [0, 0, 0, 100]
-      // }),
       new HexagonCellLayer({
         id: "hexagon-cell-layer",
         data: this.props.neededPlaces,

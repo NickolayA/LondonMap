@@ -49,7 +49,6 @@ export const changeViewport = newViewport => {
   };
 };
 
-
 export const addNeededPlaces = placeName => async dispatch => {
   const town = "London";
   const country = "Great Britain";
@@ -69,8 +68,6 @@ export const addNeededPlaces = placeName => async dispatch => {
       type: ADD_NEEDED_PLACES,
       payload: response.data
     });
-
-    //dispatch(addLinesNearNeededPlaces(response.data));
   } catch (err) {
     dispatch({
       type: ADD_NEEDED_PLACES,
@@ -81,47 +78,28 @@ export const addNeededPlaces = placeName => async dispatch => {
   }
 };
 
-export const filterCheckedPlace = (index) => {
+export const filterCheckedPlace = index => {
   return {
     type: FILTER_CHECKED_PLACE,
     payload: index
-  }
-}
+  };
+};
 
 export const findPath = coordinates => async dispatch => {
   console.log("findpath");
 
-
   const APP_ID = "bafe1922";
   const APP_KEY = "20ff777722f9f7ee2ec27ff30abc6b5a";
 
-  const request = `https://api.tfl.gov.uk/Journey/JourneyResults/${coordinates[1]},${
-    coordinates[0]}/to/${coordinates[3]},${coordinates[2]}?walkingOptimization=false&app_id=${APP_ID}&app_key=${APP_KEY}`;
+  const request = `https://api.tfl.gov.uk/Journey/JourneyResults/${
+    coordinates[1]
+  },${coordinates[0]}/to/${Number(coordinates[3])},${Number(
+    coordinates[2]
+  )}?walkingOptimization=false&app_id=${APP_ID}&app_key=${APP_KEY}`;
   const response = await axios(request);
   console.log(request);
   dispatch({
     type: ADD_FOUNDED_PATH,
     payload: response.data
-  })
-  // const startToNeededPlacesPathes = [];
-
-  // const neededPlacesLength = neededPlaces.length;
-
-  // neededPlaces.forEach(async (el, index) => {
-  //   const response = await axios(
-  //     `https://api.tfl.gov.uk/Journey/JourneyResults/${MY_POINT.lat},${
-  //       MY_POINT.lon
-  //     }/to/${Number(el.lat)},${Number(
-  //       el.lon
-  //     )}?walkingOptimization=false&app_id=${APP_ID}&app_key=${APP_KEY}`
-  //   );
-  //   console.log(el);
-  //   startToNeededPlacesPathes.push(response.data);
-  //   if (startToNeededPlacesPathes.length === neededPlacesLength) {
-  //     dispatch({
-  //       type: ADD_FOUNDED_PATH,
-  //       payload: startToNeededPlacesPathes
-  //     });
-  //   }
-  // });
+  });
 };

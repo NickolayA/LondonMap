@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import BackToCentroidButton from "./components/BackToCentroidButton";
 import EnterPlace from "./components/EnterPlace";
 import Map from "./components/Map";
 import { Provider } from "react-redux";
