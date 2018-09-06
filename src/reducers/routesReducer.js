@@ -1,4 +1,4 @@
-import { ADD_FOUNDED_PATH, LOOKING_FOR_PATH } from "../actions/types";
+import { ADD_FOUNDED_PATH, LOOKING_FOR_PATH, CLEAR_PATH } from "../actions/types";
 
 const routesReducer = (state = {}, action) => {
   switch (action.type) {
@@ -9,6 +9,10 @@ const routesReducer = (state = {}, action) => {
 
     case ADD_FOUNDED_PATH:
       return action.payload;
+
+    case CLEAR_PATH:
+      return {};
+
     default:
       return state;
   }
